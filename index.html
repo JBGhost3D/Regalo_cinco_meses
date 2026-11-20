@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestro jardín de 5 meses</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,500&family=Mulish:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #232138;
+      --bg-deep-2: #2d2a4a;
+      --bg-cream: #FAF3E7;
+      --sunflower: #F2C14E;
+      --sunflower-dark: #D9A53A;
+      --sunflower-center: #7A4B23;
+      --gerbera: #E8768A;
+      --gerbera-light: #F5A6B4;
+      --gerbera-center: #F2C14E;
+      --leaf: #6F9A72;
+      --leaf-dark: #4F7A54;
+      --text-light: #FDF8EC;
+      --text-light-dim: #CFC9DE;
+      --text-dark: #3A3450;
+      --text-dark-dim: #6B6380;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Mulish', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+
+    h1,
+    h2,
+    .serif {
+      font-family: 'Fraunces', serif;
+    }
+
+    /* ---------- Night sky: stars ---------- */
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle 4s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: .25;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    /* ---------- Fireflies ---------- */
+    .fireflies {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .firefly {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--sunflower);
+      box-shadow: 0 0 8px 3px rgba(242, 193, 78, 0.6);
+      animation: drift 14s ease-in-out infinite;
+      opacity: 0;
+    }
+
+    @keyframes drift {
+      0% {
+        transform: translate(0, 0);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: .9;
+      }
+
+      50% {
+        transform: translate(18px, -26px);
+      }
+
+      90% {
+        opacity: .5;
+      }
+
+      100% {
+        transform: translate(-10px, 10px);
+        opacity: 0;
+      }
+    }
+
+    /* ---------- Butterflies ---------- */
+    .butterflies {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .butterfly {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      opacity: 0;
+      animation: flyAcross linear infinite;
+    }
+
+    .butterfly .wing-flap {
+      width: 100%;
+      height: 100%;
+      animation: flap 0.35s ease-in-out infinite alternate;
+    }
+
+    .butterfly svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    @keyframes flyAcross {
+      0% {
+        transform: translate(-10vw, 0) translateY(0);
+        opacity: 0;
+      }
+
+      8% {
+        opacity: .9;
+      }
+
+      50% {
+        transform: translate(55vw, -60px) translateY(-10px);
+      }
+
+      92% {
+        opacity: .8;
+      }
+
+      100% {
+        transform: translate(115vw, 10px) translateY(0);
+        opacity: 0;
+      }
+    }
+
+    @keyframes flap {
+      from {
+        transform: scaleX(1);
+      }
+
+      to {
+        transform: scaleX(0.72);
+      }
+    }
+
+    /* ---------- Music control ---------- */
+    .music-toggle {
+      position: fixed;
+      bottom: 1.2rem;
+      right: 1.2rem;
+      z-index: 20;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid rgba(250, 243, 231, 0.3);
+      background: rgba(35, 33, 56, 0.75);
+      backdrop-filter: blur(6px);
+      color: var(--text-light);
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .music-toggle:hover {
+      transform: scale(1.07);
+    }
+
+    .music-toggle.playing {
+      background: rgba(232, 118, 138, 0.55);
+    }
+
+    .music-note {
+      position: fixed;
+      bottom: 1.6rem;
+      right: 4.4rem;
+      z-index: 20;
+      background: var(--gerbera);
+      color: #3A3450;
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 14px;
+      white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      animation: bounceHint 2.6s ease-in-out infinite;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .music-note::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-width: 6px 0 6px 7px;
+      border-style: solid;
+      border-color: transparent transparent transparent var(--gerbera);
+    }
+
+    .music-note.gone {
+      opacity: 0;
+      transform: translateX(8px);
+      pointer-events: none;
+    }
+
+    @keyframes bounceHint {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.2rem;
+      z-index: 1;
+    }
+
+    .hero .eyebrow {
+      color: var(--text-light-dim);
+      letter-spacing: 0.04em;
+      font-size: 0.95rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 7vw, 4.2rem);
+      font-weight: 600;
+      margin: 0 0 0.8rem 0;
+      line-height: 1.08;
+    }
+
+    .hero p {
+      max-width: 34ch;
+      color: var(--text-light-dim);
+      font-size: 1.05rem;
+      margin: 0;
+    }
+
+    .scroll-hint {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      color: var(--text-light-dim);
+      opacity: .8;
+    }
+
+    .scroll-hint span {
+      display: block;
+      width: 1px;
+      height: 34px;
+      margin: 0.5rem auto 0;
+      background: linear-gradient(var(--text-light-dim), transparent);
+      animation: pulseLine 2.2s ease-in-out infinite;
+    }
+
+    @keyframes pulseLine {
+
+      0%,
+      100% {
+        opacity: .3;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    /* ---------- Garden path ---------- */
+    .garden {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 4rem 1.2rem 6rem;
+    }
+
+    .garden-intro {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .garden-intro h2 {
+      font-size: clamp(1.6rem, 4.5vw, 2.1rem);
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+
+    .garden-intro p {
+      color: var(--text-light-dim);
+      max-width: 42ch;
+      margin: 0 auto;
+      font-size: 0.98rem;
+    }
+
+    .month-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.4rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .month-row:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+
+    .month-flower {
+      flex: 0 0 auto;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      opacity: 0;
+      transform: scale(0.3) translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .month-flower.bloom {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .month-flower svg {
+      width: 72px;
+      height: 72px;
+      display: block;
+    }
+
+    .month-flower:hover svg {
+      filter: drop-shadow(0 0 10px rgba(242, 193, 78, 0.35));
+    }
+
+    .month-card {
+      flex: 1 1 auto;
+      background: rgba(250, 243, 231, 0.06);
+      border: 1px solid rgba(250, 243, 231, 0.14);
+      border-radius: 14px;
+      padding: 1.1rem 1.3rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .month-card.bloom {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .month-card .num {
+      font-family: 'Fraunces', serif;
+      font-size: 0.85rem;
+      color: var(--sunflower);
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+
+    .month-card p {
+      margin: 0;
+      font-size: 0.97rem;
+      color: var(--text-light-dim);
+      line-height: 1.5;
+    }
+
+    .month-card .msg {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+    }
+
+    .month-card .msg img {
+      width: 100%;
+      max-height: 320px;
+      object-fit: contain;
+      /* "contain" = se ve la foto COMPLETA, sin recortar nada. */
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 10px;
+      margin-top: 0.7rem;
+      display: block;
+    }
+
+    .month-card.open .msg {
+      max-height: 420px;
+      margin-top: 0.5rem;
+    }
+
+    .month-card .tap {
+      font-size: 0.8rem;
+      color: var(--text-light-dim);
+      opacity: .7;
+    }
+
+    /* ---------- Letter section ---------- */
+    .letter-wrap {
+      position: relative;
+      z-index: 1;
+      background: var(--bg-cream);
+      padding: 5rem 1.4rem 6rem;
+    }
+
+    .big-flower-holder {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: scale(0.5) rotate(-8deg);
+      transition: opacity 0.9s ease, transform 0.9s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .big-flower-holder.bloom {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+
+    .big-flower-holder svg {
+      width: 150px;
+      height: 150px;
+      cursor: pointer;
+    }
+
+    .big-flower-holder.opening svg {
+      animation: popOpen 0.65s ease;
+    }
+
+    @keyframes popOpen {
+      0%   { transform: scale(1) rotate(0deg); }
+      30%  { transform: scale(1.3) rotate(-8deg); }
+      55%  { transform: scale(0.92) rotate(6deg); }
+      75%  { transform: scale(1.08) rotate(-2deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    .burst-particle {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      font-size: 20px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      animation: burstFloat 1.3s ease-out forwards;
+    }
+
+    @keyframes burstFloat {
+      0%   { transform: translate(-50%, -50%) translate(0, 0) scale(0.5) rotate(0deg); opacity: 0; }
+      12%  { opacity: 1; }
+      100% { transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) scale(1) rotate(var(--rot)); opacity: 0; }
+    }
+
+    .letter-glow {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 200px;
+      height: 200px;
+      transform: translate(-50%, -50%) scale(0.3);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(242,193,78,0.55), rgba(242,193,78,0) 70%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .big-flower-holder.opening .letter-glow {
+      animation: glowPulse 0.8s ease-out;
+    }
+
+    @keyframes glowPulse {
+      0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+      35%  { opacity: 0.9; }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .big-flower-holder.opening svg,
+      .big-flower-holder.opening .letter-glow,
+      .burst-particle {
+        animation: none;
+        opacity: 0;
+      }
+    }
+
+    .letter {
+      max-width: 560px;
+      margin: 0 auto;
+      text-align: center;
+      color: var(--text-dark);
+    }
+
+    .letter h2 {
+      font-size: clamp(1.7rem, 5vw, 2.3rem);
+      font-weight: 600;
+      margin-bottom: 1.6rem;
+    }
+
+    .letter-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 1.2s ease;
+    }
+
+    .letter-body.open {
+      max-height: 1400px;
+    }
+
+    .letter-body p {
+      text-align: left;
+      font-size: 1.03rem;
+      line-height: 1.75;
+      color: var(--text-dark-dim);
+      margin: 0 0 1.1rem 0;
+    }
+
+    .letter-body .signature {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--text-dark);
+      margin-top: 1.6rem;
+      text-align: right;
+    }
+
+    .hint-tap {
+      font-size: 0.85rem;
+      color: var(--text-dark-dim);
+      margin-bottom: 0;
+    }
+
+    .hint-tap.hide {
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2.4rem 1rem 3rem;
+      color: var(--text-dark-dim);
+      background: var(--bg-cream);
+      font-size: 0.9rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .firefly,
+      .scroll-hint span,
+      .star,
+      .butterfly {
+        animation: none;
+      }
+
+      .month-flower,
+      .month-card,
+      .big-flower-holder {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="stars" id="stars"></div>
+  <div class="fireflies" id="fireflies"></div>
+  <div class="butterflies" id="butterflies"></div>
+
+  <audio id="bgMusic" loop preload="none">
+    <source src="Que Bonito Es Querer - Ulices Chaidez Y Sus Plebes (LETRA_LYRICS).mp3" type="audio/mpeg">
+  </audio>
+  <button class="music-toggle" id="musicToggle" aria-label="Reproducir música">🎵</button>
+  <div class="music-note" id="musicNote">pícale aquí amor jejeje, es la música 🎶</div>
+
+  <section class="hero">
+    <div class="eyebrow">5 meses juntos</div>
+    <h1>Nuestro jardín<br>sigue creciendo</h1>
+    <p>Cada mes hemos plantado algo nuevo. Esta vez quise dejarte ver cómo va floreciendo.</p>
+    <div class="scroll-hint">desliza despacio amor, por favor jeje<span></span></div>
+  </section>
+
+  <section class="garden">
+    <div class="garden-intro">
+      <h2 class="serif">Cinco meses, cinco flores</h2>
+      <p>Toca cada una para leer lo que guardo de ese mes.</p>
+    </div>
+
+    <div id="months"></div>
+  </section>
+
+  <section class="letter-wrap">
+    <div class="big-flower-holder" id="bigFlowerHolder">
+      <div class="letter-glow"></div>
+      <!-- flor grande inyectada por JS -->
+    </div>
+    <div class="letter">
+      <h2 class="serif">Para ti</h2>
+      <p class="hint-tap" id="hintTap">Toca la flor para abrir la carta amor ❤️</p>
+      <div class="letter-body" id="letterBody">
+        <p>Llevamos cinco meses haciendo crecer esto juntos, y de verdad siento que cada mes el jardín se ve distinto:
+          más
+          lleno, más nuestro ❤️. Hoy quiero que lo veas así, con girasoles porque me recuerdan lo mucho que buscas la
+          luz
+          aunque el día esté nublado, siempre que veo un girasol solo puedo recordar tu sonrisa y tu risa y el como me
+          contagias de tu luz 🥹❤️, y con gerberas porque son tan vivas como tú, siempre gozando de la vida y de lo
+          linda que es, y me encanta ver eso, amo verte feliz.</p>
+        <p>No todos los días de este mes fueron fáciles. Hubo un par de nubes que no esperábamos y que, aunque pasaron
+          rápido, dejaron un poco de tierra removida, un poco de desorden. Pero hasta el jardín más bonito necesita
+          lluvia de vez en cuando
+          para que las raíces se hagan más fuertes, y yo prefiero seguir cuidando este hermoso jardín contigo que dejar
+          que un día gris
+          nos distraiga de todo lo que sí hemos construido y vivido 🥺❤️❤️.</p>
+        <p>Así que esto es una celebración, sobre todo. De los cinco meses mi amor, de las flores que ya abrieron y las
+          que
+          todavía nos faltan por sembrar y ver crecer ❤️. Gracias por dejarme ser parte de tu jardín 🥹❤️.</p>
+        <p>Te amo, hoy y en todos los meses que siguen ❤️❤️❤️.</p>
+        <p class="signature">— Att: Chino 😉❤️</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>Hecho con cariño para nuestros 5 meses 🌻</footer>
+
+  <script>
+    // ---------- Stars ----------
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 70; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = (Math.random() * 2 + 1).toFixed(1);
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.top = Math.random() * 100 + 'vh';
+      s.style.animationDelay = (Math.random() * 4) + 's';
+      starsContainer.appendChild(s);
+    }
+
+    // ---------- Fireflies ----------
+    const fireflyContainer = document.getElementById('fireflies');
+    for (let i = 0; i < 16; i++) {
+      const f = document.createElement('div');
+      f.className = 'firefly';
+      f.style.left = Math.random() * 100 + 'vw';
+      f.style.top = Math.random() * 100 + 'vh';
+      f.style.animationDelay = (Math.random() * 14) + 's';
+      f.style.animationDuration = (10 + Math.random() * 8) + 's';
+      fireflyContainer.appendChild(f);
+    }
+
+    // ---------- Butterflies ----------
+    const butterflySVG = (color1, color2) => `
+      <div class="wing-flap">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <path d="M32 28 C20 6 2 10 6 26 C9 38 24 34 32 28 Z" fill="${color1}"/>
+          <path d="M32 28 C44 6 62 10 58 26 C55 38 40 34 32 28 Z" fill="${color1}"/>
+          <path d="M32 34 C22 46 6 46 10 34 C13 26 25 28 32 34 Z" fill="${color2}"/>
+          <path d="M32 34 C42 46 58 46 54 34 C51 26 39 28 32 34 Z" fill="${color2}"/>
+          <rect x="30.5" y="22" width="3" height="20" rx="1.5" fill="#3A3450"/>
+        </svg>
+      </div>`;
+
+    const butterflyColors = [
+      ['var(--gerbera)', 'var(--gerbera-light)'],
+      ['var(--sunflower)', 'var(--sunflower-dark)'],
+    ];
+
+    const butterflyContainer = document.getElementById('butterflies');
+    for (let i = 0; i < 5; i++) {
+      const b = document.createElement('div');
+      b.className = 'butterfly';
+      const [c1, c2] = butterflyColors[i % butterflyColors.length];
+      b.innerHTML = butterflySVG(c1, c2);
+      b.style.top = (10 + Math.random() * 75) + 'vh';
+      b.style.animationDuration = (16 + Math.random() * 10) + 's';
+      b.style.animationDelay = (Math.random() * 12) + 's';
+      butterflyContainer.appendChild(b);
+    }
+
+    // ---------- Background music ----------
+    const bgMusic = document.getElementById('bgMusic');
+    const musicToggle = document.getElementById('musicToggle');
+    const musicNote = document.getElementById('musicNote');
+    let musicPlaying = false;
+    musicToggle.addEventListener('click', () => {
+      musicNote.classList.add('gone');
+      if (musicPlaying) {
+        bgMusic.pause();
+        musicToggle.textContent = '🎵';
+        musicToggle.classList.remove('playing');
+      } else {
+        bgMusic.play().catch(() => { });
+        musicToggle.textContent = '⏸';
+        musicToggle.classList.add('playing');
+      }
+      musicPlaying = !musicPlaying;
+    });
+
+    // ---------- Flower SVG builder ----------
+    // type: 'sunflower' | 'gerbera'
+    function flowerSVG(type, size) {
+      const petalColor = type === 'sunflower' ? 'var(--sunflower)' : 'var(--gerbera)';
+      const petalColor2 = type === 'sunflower' ? 'var(--sunflower-dark)' : 'var(--gerbera-light)';
+      const centerColor = type === 'sunflower' ? 'var(--sunflower-center)' : 'var(--gerbera-center)';
+      const petalCount = type === 'sunflower' ? 10 : 14;
+      const petalLen = type === 'sunflower' ? 32 : 36;
+      const petalWidth = type === 'sunflower' ? 11 : 7;
+      const centerR = type === 'sunflower' ? 13 : 10;
+
+      let petals = '';
+      for (let i = 0; i < petalCount; i++) {
+        const angle = (360 / petalCount) * i;
+        const fill = i % 2 === 0 ? petalColor : petalColor2;
+        petals += `<ellipse cx="50" cy="${50 - petalLen}" rx="${petalWidth}" ry="${petalLen * 0.55}" fill="${fill}" transform="rotate(${angle} 50 50)"/>`;
+      }
+
+      return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <g>${petals}</g>
+    <circle cx="50" cy="50" r="${centerR}" fill="${centerColor}"/>
+  </svg>`;
+    }
+
+    // ---------- Month data ----------
+    const monthMessages = [
+      { type: 'sunflower', label: 'Mes 1', text: 'El día que todo empezó. Todavía recuerdo lo nervioso que estaba, y lo rápido que se me quitó al estar contigo, o más o menos por que cuando sonaron los mariachis estaba temblando jajaja. Pero ame verte tan feliz ❤️.', image: '1er_mes.jpeg' },
+      { type: 'gerbera', label: 'Mes 2', text: 'Aprendo de tus manías, tus risas, que te gusta, que no te gusta y cómo te gusta que te traten cuando tienes un mal día. Cada detalle se quedó guardado, literalmente (bloc de notas 😌 jajaja).', image: 'amor_minecraft.jpeg' },
+      { type: 'sunflower', label: 'Mes 3', text: 'El mes del eclipse, dato interesante y nerd amor?? Sucedio en España, el 12 de agosto, fue hermoso. Sol, luna y un hermoso resultado entre ambos, el eclipse, para decirte que, pase lo que pase, tú siempre eres mi punto fijo, tu siempre eres mi estrella más brillante, la que jamás puedo dejar de ver ❤️.', image: 'amor.jpeg' },
+      { type: 'gerbera', label: 'Mes 4', text: 'Convertirnos en nuestro propio mundo, ninja incluido jajaja, no existe una vida que no imagine que no sea a tu lado 🥹❤️. Contigo hasta lo más random se vuelve mi lugar favorito, se vuelve mi recuerdo más amado, aquel que no perdería por nada.', image: '☆ NaruHina Chibi.jpg' },
+      { type: 'sunflower', label: 'Mes 5', text: 'Y este, el mes en el que, entre todo, decidimos seguir eligiéndonos. Esa es, para mí, la parte más bonita ❤️❤️.', image: '4_meses.jpeg' },
+    ];
+
+    const monthsContainer = document.getElementById('months');
+    monthMessages.forEach((m, idx) => {
+      const row = document.createElement('div');
+      row.className = 'month-row';
+
+      const btn = document.createElement('button');
+      btn.className = 'month-flower';
+      btn.innerHTML = flowerSVG(m.type);
+      btn.setAttribute('aria-label', 'Abrir mensaje de ' + m.label);
+
+      // encodeURI arregla nombres de archivo con espacios o símbolos (como "☆ NaruHina Chibi.jpg")
+      const imgHTML = m.image ? `<img src="${encodeURI(m.image)}" alt="Foto de ${m.label}" onerror="this.remove()">` : '';
+
+      const card = document.createElement('div');
+      card.className = 'month-card';
+      card.innerHTML = `<span class="num serif">${m.label}</span>
+    <p class="tap">toca la flor para leer</p>
+    <div class="msg"><p>${m.text}</p>${imgHTML}</div>`;
+
+      function toggle() {
+        card.classList.toggle('open');
+      }
+      btn.addEventListener('click', toggle);
+      card.addEventListener('click', toggle);
+
+      row.appendChild(btn);
+      row.appendChild(card);
+      monthsContainer.appendChild(row);
+    });
+
+    // ---------- Big flower (letter opener) ----------
+    const bigHolder = document.getElementById('bigFlowerHolder');
+    bigHolder.insertAdjacentHTML('beforeend', flowerSVG('gerbera'));
+    const letterBody = document.getElementById('letterBody');
+    const hintTap = document.getElementById('hintTap');
+
+    const burstEmojis = ['🌸', '💛', '✨', '💗', '🌼'];
+    function spawnBurst(container) {
+      const count = 14;
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'burst-particle';
+        p.textContent = burstEmojis[Math.floor(Math.random() * burstEmojis.length)];
+        const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.4 - 0.2);
+        const distance = 70 + Math.random() * 70;
+        const dx = Math.cos(angle) * distance;
+        const dy = Math.sin(angle) * distance - 20; // un poco hacia arriba
+        p.style.setProperty('--dx', dx + 'px');
+        p.style.setProperty('--dy', dy + 'px');
+        p.style.setProperty('--rot', (Math.random() * 60 - 30) + 'deg');
+        p.style.fontSize = (14 + Math.random() * 14) + 'px';
+        p.style.animationDelay = (Math.random() * 0.15) + 's';
+        container.appendChild(p);
+        setTimeout(() => p.remove(), 1600);
+      }
+    }
+
+    bigHolder.addEventListener('click', () => {
+      letterBody.classList.toggle('open');
+      hintTap.classList.toggle('hide');
+
+      bigHolder.classList.remove('opening');
+      void bigHolder.offsetWidth; // fuerza reinicio de la animación
+      bigHolder.classList.add('opening');
+      spawnBurst(bigHolder);
+    });
+
+    // ---------- Scroll reveal ----------
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('bloom');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.month-flower, .month-card, .big-flower-holder').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+
+</html>
